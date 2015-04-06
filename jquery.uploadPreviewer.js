@@ -1,6 +1,22 @@
 (function($) {
   var getFileSize, getFileTypeCssClass;
 
+  defaults = {
+    buttonText: "Add Files",
+    buttonClass: "file-preview-button",
+    shadowClass: "file-preview-shadow",
+    tableClass: "file-preview-table",
+    tableRowClass: "file-preview-row",
+    placeholderClass: "file-preview-placeholder",
+    rowTemplate: function(options) {
+      return "<tr class='" + defaults.tableRowClass + "'>" +
+               "<td>" + "<img src='" + options.src + "' class='" + options.placeholderCssClass + "' />" + "</td>" +
+               "<td class='filename'>" + options.name + "</td>" +
+               "<td class='filesize'>" + options.size + "</td>" +
+             "</tr>";
+    }
+  }
+
   //NOTE: Depends on Humanize-plus (humanize.js)
   getFileSize = function(filesize) {
     return Humanize.fileSize(filesize);
@@ -36,66 +52,61 @@
           return 'default-filetype';
       }
     })();
-    return "file-preview-placeholder " + fileTypeCssClass;
+    return defaults.placeholderClass + " " + fileTypeCssClass;
   };
 
-  defaultPreviewRowTemplate = function(options) {
-    return "<tr class='file-preview-row'>" +
-             "<td>" + "<img src='" + options.src + "' class='" + options.placeholderCssClass + "' />" + "</td>" +
-             "<td class='filename'>" + options.name + "</td>" +
-             "<td class='filesize'>" + options.size + "</td>" +
-           "</tr>"
-  }
-
   // TODO: we should also be able to click on the files and show them as a gallery.
-  return $.fn.uploadPreviewer = function(options, callback) {
+  $.fn.uploadPreviewer = function(options, callback) {
     var buttonText, previewRowTemplate, previewTable, previewTableBody, previewTableIdentifier;
     if (window.File && window.FileReader && window.FileList && window.Blob) {
-      this.wrap("<span class='ui primary button file-preview-shadow'></span>"); // TODO: ui primary button should be an option
-      buttonText = this.parent(".file-preview-shadow");
-      buttonText.prepend("<span>Add Files</span>");
-      buttonText.wrap("<span class='file-preview-button'></span>");
+
+      this.wrap("<span class='ui primary button " + defaults.shadowClass + "'></span>"); // TODO: ui primary button should be an option
+      buttonText = this.parent("." + defaults.shadowClass);
+      buttonText.prepend("<span>" + defaults.buttonText + "</span>");
+      buttonText.wrap("<span class='" + defaults.buttonClass + "'></span>");
+
       previewTableIdentifier = options.preview_table;
       previewTable = $(previewTableIdentifier);
-      previewTable.addClass("file-preview-table");
+      previewTable.addClass(defaults.tableClass);
       previewTableBody = previewTable.find("tbody");
-      previewRowTemplate = options.preview_row_template || defaultPreviewRowTemplate;
-      return this.on('change', (function(_this) {
-        return function(e) {
-          if (previewTableBody) {
-            previewTableBody.empty();
-          }
-          return $.each(e.currentTarget.files, function(index, file) {
-            var reader;
-            reader = new FileReader();
-            reader.onload = function(fileReaderEvent) {
-              var filesize, filetype, imagePreviewRow, placeholderCssClass, source;
-              if (previewTableBody) {
-                filetype = file.type;
-                if (/image/.test(filetype)) {
-                  source = fileReaderEvent.target.result;
-                  placeholderCssClass = "file-preview-placeholder image";
-                } else {
-                  source = "";
-                  placeholderCssClass = getFileTypeCssClass(filetype);
-                }
-                filesize = getFileSize(file.size);
-                imagePreviewRow = previewRowTemplate({
-                  src: source,
-                  name: file.name,
-                  placeholderCssClass: placeholderCssClass,
-                  size: filesize
-                });
-                previewTableBody.append(imagePreviewRow);
+
+      previewRowTemplate = options.preview_row_template || defaults.rowTemplate;
+
+      this.on('change', function(e) {
+        if (previewTableBody) {
+          previewTableBody.empty();
+        }
+
+        var reader;
+        $.each(e.currentTarget.files, function(index, file) {
+          reader = new FileReader();
+          reader.onload = function(fileReaderEvent) {
+            var filesize, filetype, imagePreviewRow, placeholderCssClass, source;
+            if (previewTableBody) {
+              filetype = file.type;
+              if (/image/.test(filetype)) {
+                source = fileReaderEvent.target.result;
+                placeholderCssClass = defaults.placeholderClass + " image";
+              } else {
+                source = "";
+                placeholderCssClass = getFileTypeCssClass(filetype);
               }
-              if (callback) {
-                return callback(fileReaderEvent);
-              }
-            };
-            return reader.readAsDataURL(file);
-          });
-        };
-      })(this));
+              filesize = getFileSize(file.size);
+              imagePreviewRow = previewRowTemplate({
+                src: source,
+                name: file.name,
+                placeholderCssClass: placeholderCssClass,
+                size: filesize
+              });
+              previewTableBody.append(imagePreviewRow);
+            }
+            if (callback) {
+              callback(fileReaderEvent);
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+      });
     } else {
       throw "The File APIs are not fully supported in this browser.";
     }
