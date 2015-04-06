@@ -47,6 +47,7 @@
            "</tr>"
   }
 
+  // TODO: we should also be able to click on the files and show them as a gallery.
   return $.fn.uploadPreviewer = function(options, callback) {
     var buttonText, previewRowTemplate, previewTable, previewTableBody, previewTableIdentifier;
     if (window.File && window.FileReader && window.FileList && window.Blob) {
