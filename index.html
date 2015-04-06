@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>File Upload Previewer</title>
+    <meta charset="utf-8" />
+    <link href="css/jquery.uploadPreviewer.css" rel="stylesheet" />
+    <script src="js/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="js/vendor/humanize-plus/public/dist/humanize.min.js"></script>
+    <script src="jquery.uploadPreviewer.js"></script>
+  </head>
+
+  <body>
+    <div id="file-uploader">
+      <form>
+        <input type="file" multiple="multiple" />
+        <table id="file-upload-preview-table">
+          <tbody></tbody>
+        </table>
+      </form>
+    </div>
+  </body>
+</html>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("input[type=file]").uploadPreviewer({ preview_table: "#file-upload-preview-table" }, function(fileReaderEvent) {
+      // TODO: do something that demonstrates....
+      console.log(fileReaderEvent);
+    });
+  });
+</script>

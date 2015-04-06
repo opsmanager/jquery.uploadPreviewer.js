@@ -1,0 +1,27 @@
+{
+  "name": "jquery.uploadPreviewer.js",
+  "main": "jquery.uploadPreviewer.js",
+  "version": "0.0.1",
+  "authors": [
+    "Dominic Wong <dominic@opsmanager.com>",
+    "Rui Baltazar <rui@opsmanager.com>"
+  ],
+  "description": "Easy preview for file uploading",
+  "keywords": [
+    "jquery",
+    "file upload",
+    "preview"
+  ],
+  "dependencies": {
+    "jquery": "latest",
+    "humanize-plus": "latest"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
