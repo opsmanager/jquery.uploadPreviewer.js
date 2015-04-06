@@ -50,10 +50,10 @@
   return $.fn.uploadPreviewer = function(options, callback) {
     var buttonText, previewRowTemplate, previewTable, previewTableBody, previewTableIdentifier;
     if (window.File && window.FileReader && window.FileList && window.Blob) {
-      this.wrap("<span class='file-preview-shadow'></span>");
+      this.wrap("<span class='ui primary button file-preview-shadow'></span>"); // TODO: ui primary button should be an option
       buttonText = this.parent(".file-preview-shadow");
       buttonText.prepend("<span>Add Files</span>");
-      buttonText.wrap("<span class='btn file-preview-button'></span>");
+      buttonText.wrap("<span class='file-preview-button'></span>");
       previewTableIdentifier = options.preview_table;
       previewTable = $(previewTableIdentifier);
       previewTable.addClass("file-preview-table");

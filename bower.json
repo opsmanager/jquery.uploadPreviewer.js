@@ -13,8 +13,9 @@
     "preview"
   ],
   "dependencies": {
-    "jquery": "latest",
-    "humanize-plus": "latest"
+    "jquery"        : "latest",
+    "humanize-plus" : "latest",
+    "semantic-ui"   : "latest"
   },
   "license": "MIT",
   "ignore": [
