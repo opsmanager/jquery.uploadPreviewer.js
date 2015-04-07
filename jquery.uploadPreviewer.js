@@ -57,15 +57,30 @@
 
   // TODO: we should also be able to click on the files and show them as a gallery.
   $.fn.uploadPreviewer = function(options, callback) {
-    var buttonText, previewRowTemplate, previewTable, previewTableBody, previewTableIdentifier;
+
+    var buttonText,
+        previewRowTemplate,
+        previewTable,
+        previewTableBody,
+        previewTableIdentifier;
+
     if (window.File && window.FileReader && window.FileList && window.Blob) {
 
-      this.wrap("<span class='ui primary button " + defaults.shadowClass + "'></span>"); // TODO: ui primary button should be an option
+      this.wrap("<span class='btn btn-primary " + defaults.shadowClass + "'></span>");
       buttonText = this.parent("." + defaults.shadowClass);
       buttonText.prepend("<span>" + defaults.buttonText + "</span>");
       buttonText.wrap("<span class='" + defaults.buttonClass + "'></span>");
 
       previewTableIdentifier = options.preview_table;
+      if (!previewTableIdentifier) {
+        var filePreviewTable = "<table class='table table-striped " + defaults.tableClass + "' id='" + defaults.tableClass + "'>" +
+                                 "<tbody></tbody>" +
+                               "</table>";
+
+        $("span." + defaults.buttonClass).after(filePreviewTable);
+        previewTableIdentifier = "table." + defaults.tableClass;
+      }
+
       previewTable = $(previewTableIdentifier);
       previewTable.addClass(defaults.tableClass);
       previewTableBody = previewTable.find("tbody");

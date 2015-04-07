@@ -4,19 +4,22 @@
     <title>File Upload Previewer</title>
     <meta charset="utf-8" />
     <link href="css/jquery.uploadPreviewer.css" rel="stylesheet" />
-    <link href="vendor/semantic-ui/dist/semantic.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
   </head>
 
-  <body style="padding: 100px;">
-    <h1>File Upload Previewer Demo</h1>
-    <p>Click 'Add Files' and choose your files. You will then be able to preview your files!</p>
-    <div id="file-uploader">
-      <form>
-        <input type="file" multiple="multiple" />
-        <table id="file-upload-preview-table" class="ui celled striped table">
-          <tbody></tbody>
-        </table>
-      </form>
+  <body>
+    <div class="container">
+      <div class="row">
+        <h1>File Upload Previewer Demo</h1>
+        <p>Click 'Add Files' and choose your files. You will then be able to preview your files!</p>
+      </div>
+      <div class="row">
+        <div id="file-uploader">
+          <form>
+            <input type="file" multiple="multiple" />
+          </form>
+        </div>
+      </div>
     </div>
   </body>
 </html>
@@ -27,7 +30,7 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    $("input[type=file]").uploadPreviewer({ preview_table: "#file-upload-preview-table" }, function(fileReaderEvent) {
+    $("input[type=file]").uploadPreviewer({}, function(fileReaderEvent) {
       // TODO: do something that demonstrates....
       console.log(fileReaderEvent);
     });

@@ -13,9 +13,8 @@
     "preview"
   ],
   "dependencies": {
-    "jquery"        : "latest",
     "humanize-plus" : "latest",
-    "semantic-ui"   : "latest"
+    "bootstrap"     : "latest"
   },
   "license": "MIT",
   "ignore": [
