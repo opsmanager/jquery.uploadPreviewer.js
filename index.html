@@ -3,8 +3,9 @@
   <head>
     <title>File Upload Previewer</title>
     <meta charset="utf-8" />
-    <link href="css/jquery.uploadPreviewer.css" rel="stylesheet" />
     <link href="vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="vendor/loaders.css/loaders.min.css" rel="stylesheet" />
+    <link href="css/jquery.uploadPreviewer.css" rel="stylesheet" />
   </head>
 
   <body>
@@ -32,7 +33,7 @@
   $(document).ready(function() {
     $("input[type=file]").uploadPreviewer({}, function(fileReaderEvent) {
       // TODO: do something that demonstrates....
-      console.log(fileReaderEvent);
+      //console.log(fileReaderEvent);
     });
   });
 </script>

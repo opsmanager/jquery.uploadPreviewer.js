@@ -5,15 +5,29 @@
     buttonText: "Add Files",
     buttonClass: "file-preview-button",
     shadowClass: "file-preview-shadow",
-    tableClass: "file-preview-table",
+    tableCss: "file-preview-table",
     tableRowClass: "file-preview-row",
     placeholderClass: "file-preview-placeholder",
+    loadingCss: "file-preview-loading",
+    tableTemplate: function() {
+      return "<table class='table table-striped file-preview-table' id='file-preview-table'>" +
+               "<tbody></tbody>" +
+             "</table>";
+    },
     rowTemplate: function(options) {
       return "<tr class='" + defaults.tableRowClass + "'>" +
                "<td>" + "<img src='" + options.src + "' class='" + options.placeholderCssClass + "' />" + "</td>" +
                "<td class='filename'>" + options.name + "</td>" +
                "<td class='filesize'>" + options.size + "</td>" +
              "</tr>";
+    },
+    loadingTemplate: function() {
+      return "<div id='file-preview-loading-container'>" +
+               "<div id='file-preview-loading' class='loader-inner ball-clip-rotate-pulse no-show'>" +
+                 "<div></div>" +
+                 "<div></div>" +
+               "</div>" +
+             "</div>";
     }
   }
 
@@ -73,26 +87,28 @@
 
       previewTableIdentifier = options.preview_table;
       if (!previewTableIdentifier) {
-        var filePreviewTable = "<table class='table table-striped " + defaults.tableClass + "' id='" + defaults.tableClass + "'>" +
-                                 "<tbody></tbody>" +
-                               "</table>";
-
-        $("span." + defaults.buttonClass).after(filePreviewTable);
-        previewTableIdentifier = "table." + defaults.tableClass;
+        $("span." + defaults.buttonClass).after(defaults.tableTemplate());
+        previewTableIdentifier = "table." + defaults.tableCss;
       }
 
       previewTable = $(previewTableIdentifier);
-      previewTable.addClass(defaults.tableClass);
+      previewTable.addClass(defaults.tableCss);
       previewTableBody = previewTable.find("tbody");
 
       previewRowTemplate = options.preview_row_template || defaults.rowTemplate;
+
+      previewTable.after(defaults.loadingTemplate());
 
       this.on('change', function(e) {
         if (previewTableBody) {
           previewTableBody.empty();
         }
 
+        var loadingSpinner = $("#" + defaults.loadingCss);
+        loadingSpinner.show();
+
         var reader;
+        var filesCount = e.currentTarget.files.length;
         $.each(e.currentTarget.files, function(index, file) {
           reader = new FileReader();
           reader.onload = function(fileReaderEvent) {
@@ -113,7 +129,12 @@
                 placeholderCssClass: placeholderCssClass,
                 size: filesize
               });
+
               previewTableBody.append(imagePreviewRow);
+
+              if (index == filesCount - 1) {
+                loadingSpinner.hide();
+              }
             }
             if (callback) {
               callback(fileReaderEvent);

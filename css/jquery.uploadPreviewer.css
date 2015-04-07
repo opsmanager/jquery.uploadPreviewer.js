@@ -49,3 +49,29 @@
 .file-preview-table td {
   padding: 4px 6px;
 }
+
+.no-show {
+  display: none;
+}
+
+#file-preview-loading {
+  width: 34px; /* width = 30px (outer div) + 2*2px (border) */
+  height: 34px;
+  margin: 0 auto;
+}
+
+.ball-clip-rotate-pulse > div:first-child {
+  background: #337ab7;
+  /* override bootstrap */
+  -webkit-box-sizing: initial;
+  -moz-box-sizing: initial;
+  box-sizing: initial;
+}
+
+.ball-clip-rotate-pulse > div:last-child {
+  border-color: #337ab7 transparent;
+  /* override bootstrap */
+  -webkit-box-sizing: initial;
+  -moz-box-sizing: initial;
+  box-sizing: initial;
+}
