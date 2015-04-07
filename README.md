@@ -2,6 +2,8 @@
 
 jQuery.uploadPreviewer.js is a jQuery plugin that turns a file input into a file upload previewer.
 
+Check the [demo page](http://opsmanager.github.io/jquery.uploadPreviewer.js) here.
+
 ### Basic Usage
 
 ```html
