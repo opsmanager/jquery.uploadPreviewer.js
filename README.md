@@ -14,20 +14,15 @@ Check the [demo page](http://opsmanager.github.io/jquery.uploadPreviewer.js) her
   $('input[type=file]').uploadPreviewer(options, callback);
 ```
 
-Example
-```javascript
-  $('input[type=file]').uploadPreviewer({}, function(fileReaderEvent) {
-    console.log(fileReaderEvent);
-  });
-```
-
 ### Options
-| Key                   | Description                                                           |
-| --------------------- | --------------------------------------------------------------------- |
-| preview_table         | The table that will contain the file previews. e.g. "#pictures-table" |
-| preview_row_template  | A function that will return a template                                |
+
+| Key                   | Description                                                           | Optional |
+| --------------------- | --------------------------------------------------------------------- | -------- |
+| preview_table         | The table that will contain the file previews. e.g. "#pictures-table" | Yes      |
+| preview_row_template  | A function that will return a template                                | Yes      |
 
 ### Preview Table Row Template
+
 A default row template is provided if you don't provide one. Otherwise, the variables
 provided to the template include are
 - `src` (image source)

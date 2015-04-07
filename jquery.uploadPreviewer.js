@@ -71,6 +71,9 @@
 
   // TODO: we should also be able to click on the files and show them as a gallery.
   $.fn.uploadPreviewer = function(options, callback) {
+    if (!options) {
+      options = {};
+    }
 
     var buttonText,
         previewRowTemplate,
