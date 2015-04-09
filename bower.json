@@ -13,9 +13,9 @@
     "preview"
   ],
   "dependencies": {
-    "humanize-plus" : "latest",
-    "loaders.css"   : "latest",
-    "bootstrap"     : "latest"
+    "humanize-plus": "latest",
+    "loaders.css": "latest",
+    "bootstrap": "latest"
   },
   "license": "MIT",
   "ignore": [
@@ -24,5 +24,8 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "devDependencies": {
+    "qunit": "~1.18.0"
+  }
 }
