@@ -173,7 +173,8 @@
       }
 
       this._onComplete = function(eventData) {
-        $.event.trigger('file-preview:submit:complete', eventData);
+        eventData['type'] = 'file-preview:submit:complete'
+        $.event.trigger(eventData);
       }
 
       this.submit = function(successCallback, errorCallback) {
