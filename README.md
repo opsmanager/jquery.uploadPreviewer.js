@@ -59,3 +59,6 @@ provided to the template include are
 - `size` (filesize)
 - `placeholderCssClass` (it should be attached to the image, which will provide a placeholder based on the file type if the file is not an image).
 
+## Credits
+[Jiangping Hsu](https://dribbble.com/ping) for supplying the file icons
+
