@@ -1,7 +1,7 @@
 {
   "name": "jquery.uploadPreviewer.js",
   "main": "jquery.uploadPreviewer.js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "authors": [
     "Dominic Wong <dominic@opsmanager.com>",
     "Rui Baltazar <rui@opsmanager.com>"
