@@ -26,11 +26,11 @@
 </html>
 
 <script src="vendor/jquery/dist/jquery.min.js"></script>
-<script src="vendor/humanize-plus/public/dist/humanize.min.js"></script>
 <script src="jquery.uploadPreviewer.js"></script>
 
 <script type="text/javascript">
   $(document).ready(function() {
-    $("input[type=file]").uploadPreviewer();
+    myUploadInput = $("input[type=file]").uploadPreviewer();
+
   });
 </script>

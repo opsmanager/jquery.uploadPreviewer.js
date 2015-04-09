@@ -1,7 +1,6 @@
 (function($) {
-  var getFileSize, getFileTypeCssClass;
-
   defaults = {
+    formDataKey: "files",
     buttonText: "Add Files",
     buttonClass: "file-preview-button",
     shadowClass: "file-preview-shadow",
@@ -15,15 +14,16 @@
              "</table>";
     },
     rowTemplate: function(options) {
-      return "<tr class='" + defaults.tableRowClass + "'>" +
+      return "<tr class='" + config.tableRowClass + "'>" +
                "<td>" + "<img src='" + options.src + "' class='" + options.placeholderCssClass + "' />" + "</td>" +
                "<td class='filename'>" + options.name + "</td>" +
                "<td class='filesize'>" + options.size + "</td>" +
+               "<td class='remove-file'><button class='btn btn-danger'>&times;</button></td>" +
              "</tr>";
     },
     loadingTemplate: function() {
       return "<div id='file-preview-loading-container'>" +
-               "<div id='file-preview-loading' class='loader-inner ball-clip-rotate-pulse no-show'>" +
+               "<div id='"+config.loadingCss+"' class='loader-inner ball-clip-rotate-pulse no-show'>" +
                  "<div></div>" +
                  "<div></div>" +
                "</div>" +
@@ -32,7 +32,8 @@
   }
 
   //NOTE: Depends on Humanize-plus (humanize.js)
-  getFileSize = function(filesize) {
+  $.getScript("https://cdnjs.cloudflare.com/ajax/libs/humanize-plus/1.5.0/humanize.min.js")
+  var getFileSize = function(filesize) {
     return Humanize.fileSize(filesize);
   };
 
@@ -42,7 +43,7 @@
   // Quick ref:  http://www.sitepoint.com/web-foundations/mime-types-complete-list/
   //
   // NOTE: For extended support of mime types, we should use https://github.com/broofa/node-mime
-  getFileTypeCssClass = function(filetype) {
+  var getFileTypeCssClass = function(filetype) {
     var fileTypeCssClass;
     fileTypeCssClass = (function() {
       switch (true) {
@@ -69,50 +70,62 @@
     return defaults.placeholderClass + " " + fileTypeCssClass;
   };
 
-  // TODO: we should also be able to click on the files and show them as a gallery.
   $.fn.uploadPreviewer = function(options, callback) {
+    var that = this;
+
     if (!options) {
       options = {};
     }
-
+    config = $.extend({}, defaults, options);
     var buttonText,
         previewRowTemplate,
         previewTable,
         previewTableBody,
-        previewTableIdentifier;
+        previewTableIdentifier,
+        currentFileList = [];
 
     if (window.File && window.FileReader && window.FileList && window.Blob) {
 
-      this.wrap("<span class='btn btn-primary " + defaults.shadowClass + "'></span>");
-      buttonText = this.parent("." + defaults.shadowClass);
-      buttonText.prepend("<span>" + defaults.buttonText + "</span>");
-      buttonText.wrap("<span class='" + defaults.buttonClass + "'></span>");
+      this.wrap("<span class='btn btn-primary " + config.shadowClass + "'></span>");
+      buttonText = this.parent("." + config.shadowClass);
+      buttonText.prepend("<span>" + config.buttonText + "</span>");
+      buttonText.wrap("<span class='" + config.buttonClass + "'></span>");
 
       previewTableIdentifier = options.preview_table;
       if (!previewTableIdentifier) {
-        $("span." + defaults.buttonClass).after(defaults.tableTemplate());
-        previewTableIdentifier = "table." + defaults.tableCss;
+        $("span." + config.buttonClass).after(config.tableTemplate());
+        previewTableIdentifier = "table." + config.tableCss;
       }
 
       previewTable = $(previewTableIdentifier);
-      previewTable.addClass(defaults.tableCss);
+      previewTable.addClass(config.tableCss);
       previewTableBody = previewTable.find("tbody");
 
-      previewRowTemplate = options.preview_row_template || defaults.rowTemplate;
+      previewRowTemplate = options.preview_row_template || config.rowTemplate;
 
-      previewTable.after(defaults.loadingTemplate());
+      previewTable.after(config.loadingTemplate());
+
+      previewTable.on("click", ".remove-file", function() {
+        var parentRow = $(this).parent("tr");
+        var filename = parentRow.find(".filename").text();
+        for (var i = 0; i < currentFileList.length; i++) {
+          if (currentFileList[i].name == filename) {
+            currentFileList.splice(i, 1);
+            break;
+          }
+        }
+        parentRow.remove();
+      });
 
       this.on('change', function(e) {
-        if (previewTableBody) {
-          previewTableBody.empty();
-        }
-
-        var loadingSpinner = $("#" + defaults.loadingCss);
+        var loadingSpinner = $("#" + config.loadingCss);
         loadingSpinner.show();
 
         var reader;
         var filesCount = e.currentTarget.files.length;
         $.each(e.currentTarget.files, function(index, file) {
+          currentFileList.push(file);
+
           reader = new FileReader();
           reader.onload = function(fileReaderEvent) {
             var filesize, filetype, imagePreviewRow, placeholderCssClass, source;
@@ -120,7 +133,7 @@
               filetype = file.type;
               if (/image/.test(filetype)) {
                 source = fileReaderEvent.target.result;
-                placeholderCssClass = defaults.placeholderClass + " image";
+                placeholderCssClass = config.placeholderClass + " image";
               } else {
                 source = "";
                 placeholderCssClass = getFileTypeCssClass(filetype);
@@ -146,6 +159,59 @@
           reader.readAsDataURL(file);
         });
       });
+
+      this.fileList = function() {
+        return currentFileList;
+      }
+
+      this.url = function(url) {
+        if (url != undefined) {
+          config.url = url;
+        } else {
+          return config.url;
+        }
+      }
+
+      this._onComplete = function(eventData) {
+        $.event.trigger('file-preview:submit:complete', eventData);
+      }
+
+      this.submit = function(successCallback, errorCallback) {
+        if (config.url == undefined) throw('Please set the URL to which I shall post the files');
+
+        if (currentFileList.length > 0) {
+          var filesFormData = new FormData();
+          currentFileList.forEach(function(file) {
+            filesFormData.append(options.formDataKey + "[]", file);
+          });
+
+          $.ajax({
+            type: "POST",
+            url: config.url,
+            data: filesFormData,
+            contentType: false,
+            processData: false,
+            success: function(data, status, jqXHR) {
+              if (typeof successCallback == "function") {
+                successCallback(data, status, jqXHR);
+              }
+              that._onComplete({ data: data, status: status, jqXHR: jqXHR });
+            },
+            error: function(jqXHR, status, error) {
+              if (typeof errorCallback == "function") {
+                errorCallback(jqXHR, status, error);
+              }
+              that._onComplete({ error: error, status: status, jqXHR: jqXHR });
+            }
+          });
+        } else {
+          console.log("There are no selected files, please select at least one file before submitting.");
+          that._onComplete({ status: 'no-files' });
+        }
+      }
+
+      return this;
+
     } else {
       throw "The File APIs are not fully supported in this browser.";
     }
