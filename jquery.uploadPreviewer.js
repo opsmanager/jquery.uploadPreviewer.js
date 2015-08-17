@@ -165,7 +165,7 @@
       }
 
       this.clearFileList = function() {
-        currentFileList = [];
+        $('.remove-file').click();
       }
 
       this.url = function(url) {
