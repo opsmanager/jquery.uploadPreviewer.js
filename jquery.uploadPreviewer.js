@@ -164,6 +164,10 @@
         return currentFileList;
       }
 
+      this.clearFileList = function() {
+        currentFileList = [];
+      }
+
       this.url = function(url) {
         if (url != undefined) {
           config.url = url;
