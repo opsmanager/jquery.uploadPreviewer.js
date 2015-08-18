@@ -196,6 +196,18 @@
             data: filesFormData,
             contentType: false,
             processData: false,
+            xhr: function() {
+              var xhr = new window.XMLHttpRequest();
+              xhr.upload.addEventListener("progress", function(evt) {
+                if (evt.lengthComputable && 
+                    options != null &&
+                    options.uploadProgress != null 
+                    && typeof options.uploadProgress == "function") {
+                  options.uploadProgress(evt.loaded / evt.total);
+                }
+              }, false);
+              return xhr;
+            },
             success: function(data, status, jqXHR) {
               if (typeof successCallback == "function") {
                 successCallback(data, status, jqXHR);
