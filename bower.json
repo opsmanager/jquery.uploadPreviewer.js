@@ -1,10 +1,12 @@
 {
   "name": "jquery.uploadPreviewer.js",
   "main": "jquery.uploadPreviewer.js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "authors": [
     "Dominic Wong <dominic@opsmanager.com>",
-    "Rui Baltazar <rui@opsmanager.com>"
+    "Rui Baltazar <rui@opsmanager.com>",
+    "Jude Cooray <jude@opsmanager.com>",
+    "Jason Milkins <jason@opsmanager.com>",
   ],
   "description": "Easy preview for file uploading",
   "keywords": [
