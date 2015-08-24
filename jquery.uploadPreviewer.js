@@ -115,6 +115,7 @@
           }
         }
         parentRow.remove();
+        this._triggerFilesChangedEvent();
       });
 
       this.on('change', function(e) {
@@ -158,6 +159,8 @@
           };
           reader.readAsDataURL(file);
         });
+
+        this._triggerFilesChangedEvent();
       });
 
       this.fileList = function() {
@@ -180,6 +183,10 @@
         eventData['type'] = 'file-preview:submit:complete'
         $.event.trigger(eventData);
       }
+
+      this._triggerFilesChangedEvent = function() {
+        $.event.trigger({ type: 'file-preview:changed', files: this.fileList() });
+      };
 
       this.submit = function(successCallback, errorCallback) {
         if (config.url == undefined) throw('Please set the URL to which I shall post the files');
