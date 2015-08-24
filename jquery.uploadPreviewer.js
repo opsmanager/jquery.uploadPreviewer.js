@@ -115,6 +115,7 @@
           }
         }
         parentRow.remove();
+        $.event.trigger({ type: 'file-preview:changed', files: currentFileList });
       });
 
       this.on('change', function(e) {
@@ -158,6 +159,8 @@
           };
           reader.readAsDataURL(file);
         });
+
+        $.event.trigger({ type: 'file-preview:changed', files: currentFileList });
       });
 
       this.fileList = function() {
